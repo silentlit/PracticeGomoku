@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0712914F1F1DB56100B37C4F /* ServerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0712914E1F1DB56100B37C4F /* ServerVC.swift */; };
+		071291511F1DB56D00B37C4F /* ClientVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 071291501F1DB56D00B37C4F /* ClientVC.swift */; };
+		0731E4DE1F1D9D9800437BDF /* Chess.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0731E4DD1F1D9D9800437BDF /* Chess.swift */; };
+		0731E4E01F1D9DD800437BDF /* Black.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0731E4DF1F1D9DD800437BDF /* Black.swift */; };
+		0731E4E21F1D9DE300437BDF /* White.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0731E4E11F1D9DE300437BDF /* White.swift */; };
 		078073FF1F1D987800A5169D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 078073FE1F1D987800A5169D /* AppDelegate.swift */; };
 		078074011F1D987800A5169D /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 078074001F1D987800A5169D /* ViewController.swift */; };
 		078074041F1D987800A5169D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 078074021F1D987800A5169D /* Main.storyboard */; };
@@ -15,6 +20,7 @@
 		0780740C1F1D987800A5169D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0780740A1F1D987800A5169D /* LaunchScreen.storyboard */; };
 		078074171F1D987800A5169D /* PracticeGomokuTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 078074161F1D987800A5169D /* PracticeGomokuTests.swift */; };
 		078074221F1D987800A5169D /* PracticeGomokuUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 078074211F1D987800A5169D /* PracticeGomokuUITests.swift */; };
+		919BB472BC416CB1F3CD0CD7 /* Pods_PracticeGomoku.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84D16C824CB7DB0BE0146CF8 /* Pods_PracticeGomoku.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -35,6 +41,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0712914E1F1DB56100B37C4F /* ServerVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerVC.swift; sourceTree = "<group>"; };
+		071291501F1DB56D00B37C4F /* ClientVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClientVC.swift; sourceTree = "<group>"; };
+		0731E4DD1F1D9D9800437BDF /* Chess.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Chess.swift; sourceTree = "<group>"; };
+		0731E4DF1F1D9DD800437BDF /* Black.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Black.swift; sourceTree = "<group>"; };
+		0731E4E11F1D9DE300437BDF /* White.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = White.swift; sourceTree = "<group>"; };
 		078073FB1F1D987800A5169D /* PracticeGomoku.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PracticeGomoku.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		078073FE1F1D987800A5169D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		078074001F1D987800A5169D /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -49,6 +60,9 @@
 		0780741D1F1D987800A5169D /* PracticeGomokuUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PracticeGomokuUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		078074211F1D987800A5169D /* PracticeGomokuUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeGomokuUITests.swift; sourceTree = "<group>"; };
 		078074231F1D987800A5169D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		84D16C824CB7DB0BE0146CF8 /* Pods_PracticeGomoku.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PracticeGomoku.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		8535A6764F5117798DB93B06 /* Pods-PracticeGomoku.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PracticeGomoku.release.xcconfig"; path = "Pods/Target Support Files/Pods-PracticeGomoku/Pods-PracticeGomoku.release.xcconfig"; sourceTree = "<group>"; };
+		FA98E0E14FBF1C8570359CD2 /* Pods-PracticeGomoku.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PracticeGomoku.debug.xcconfig"; path = "Pods/Target Support Files/Pods-PracticeGomoku/Pods-PracticeGomoku.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,6 +70,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				919BB472BC416CB1F3CD0CD7 /* Pods_PracticeGomoku.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -76,6 +91,29 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0731E4DB1F1D9C9500437BDF /* View */ = {
+			isa = PBXGroup;
+			children = (
+				078074001F1D987800A5169D /* ViewController.swift */,
+				078074021F1D987800A5169D /* Main.storyboard */,
+				078074081F1D987800A5169D /* Assets.xcassets */,
+				0780740A1F1D987800A5169D /* LaunchScreen.storyboard */,
+				0712914E1F1DB56100B37C4F /* ServerVC.swift */,
+				071291501F1DB56D00B37C4F /* ClientVC.swift */,
+			);
+			name = View;
+			sourceTree = "<group>";
+		};
+		0731E4DC1F1D9D4100437BDF /* Chess */ = {
+			isa = PBXGroup;
+			children = (
+				0731E4DD1F1D9D9800437BDF /* Chess.swift */,
+				0731E4DF1F1D9DD800437BDF /* Black.swift */,
+				0731E4E11F1D9DE300437BDF /* White.swift */,
+			);
+			name = Chess;
+			sourceTree = "<group>";
+		};
 		078073F21F1D987800A5169D = {
 			isa = PBXGroup;
 			children = (
@@ -83,6 +121,8 @@
 				078074151F1D987800A5169D /* PracticeGomokuTests */,
 				078074201F1D987800A5169D /* PracticeGomokuUITests */,
 				078073FC1F1D987800A5169D /* Products */,
+				ACAAD21717DCBA7A48476AB1 /* Pods */,
+				2BCC301096495CF848F8363F /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -99,11 +139,9 @@
 		078073FD1F1D987800A5169D /* PracticeGomoku */ = {
 			isa = PBXGroup;
 			children = (
+				0731E4DC1F1D9D4100437BDF /* Chess */,
+				0731E4DB1F1D9C9500437BDF /* View */,
 				078073FE1F1D987800A5169D /* AppDelegate.swift */,
-				078074001F1D987800A5169D /* ViewController.swift */,
-				078074021F1D987800A5169D /* Main.storyboard */,
-				078074081F1D987800A5169D /* Assets.xcassets */,
-				0780740A1F1D987800A5169D /* LaunchScreen.storyboard */,
 				0780740D1F1D987800A5169D /* Info.plist */,
 				078074051F1D987800A5169D /* PracticeGomoku.xcdatamodeld */,
 			);
@@ -128,6 +166,23 @@
 			path = PracticeGomokuUITests;
 			sourceTree = "<group>";
 		};
+		2BCC301096495CF848F8363F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				84D16C824CB7DB0BE0146CF8 /* Pods_PracticeGomoku.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		ACAAD21717DCBA7A48476AB1 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				FA98E0E14FBF1C8570359CD2 /* Pods-PracticeGomoku.debug.xcconfig */,
+				8535A6764F5117798DB93B06 /* Pods-PracticeGomoku.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -135,9 +190,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 078074261F1D987800A5169D /* Build configuration list for PBXNativeTarget "PracticeGomoku" */;
 			buildPhases = (
+				B5A08E5FF49E5F156409097E /* [CP] Check Pods Manifest.lock */,
 				078073F71F1D987800A5169D /* Sources */,
 				078073F81F1D987800A5169D /* Frameworks */,
 				078073F91F1D987800A5169D /* Resources */,
+				2DEC2E9B2491E025F8F1D1E4 /* [CP] Embed Pods Frameworks */,
+				9C6B71D68BB44006DC956043 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -257,14 +315,67 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		2DEC2E9B2491E025F8F1D1E4 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-PracticeGomoku/Pods-PracticeGomoku-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		9C6B71D68BB44006DC956043 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-PracticeGomoku/Pods-PracticeGomoku-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		B5A08E5FF49E5F156409097E /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		078073F71F1D987800A5169D /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0712914F1F1DB56100B37C4F /* ServerVC.swift in Sources */,
+				071291511F1DB56D00B37C4F /* ClientVC.swift in Sources */,
+				0731E4E01F1D9DD800437BDF /* Black.swift in Sources */,
+				0731E4DE1F1D9D9800437BDF /* Chess.swift in Sources */,
 				078074071F1D987800A5169D /* PracticeGomoku.xcdatamodeld in Sources */,
 				078074011F1D987800A5169D /* ViewController.swift in Sources */,
 				078073FF1F1D987800A5169D /* AppDelegate.swift in Sources */,
+				0731E4E21F1D9DE300437BDF /* White.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -404,9 +515,11 @@
 		};
 		078074271F1D987800A5169D /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = FA98E0E14FBF1C8570359CD2 /* Pods-PracticeGomoku.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = PracticeGomoku/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = yyh.PracticeGomoku;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -415,9 +528,11 @@
 		};
 		078074281F1D987800A5169D /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8535A6764F5117798DB93B06 /* Pods-PracticeGomoku.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = PracticeGomoku/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = yyh.PracticeGomoku;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -491,6 +606,7 @@
 				078074281F1D987800A5169D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		078074291F1D987800A5169D /* Build configuration list for PBXNativeTarget "PracticeGomokuTests" */ = {
 			isa = XCConfigurationList;
@@ -499,6 +615,7 @@
 				0780742B1F1D987800A5169D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		0780742C1F1D987800A5169D /* Build configuration list for PBXNativeTarget "PracticeGomokuUITests" */ = {
 			isa = XCConfigurationList;
@@ -507,6 +624,7 @@
 				0780742E1F1D987800A5169D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 
