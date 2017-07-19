@@ -46,6 +46,16 @@ class ServerVC: UIViewController
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        //开始监听
+        serverSocket = GCDAsyncSocket(delegate: self, delegateQueue: dispatch_get_main_queue())
+        
+        do {
+            try serverSocket?.acceptOnPort(UInt16(1234))
+            addText("Success")
+        } catch _ {
+            addText("Failed")
+        }
 
         // Do any additional setup after loading the view.
     }

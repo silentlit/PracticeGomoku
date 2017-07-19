@@ -52,6 +52,17 @@ class ClientVC: UIViewController
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        //开始连接
+        clientSocket = GCDAsyncSocket(delegate: self, delegateQueue: dispatch_get_main_queue())
+        
+        do {
+            try clientSocket?.connectToHost("127.0.0.1", onPort: UInt16(1234))
+            addText("Success")
+            
+        } catch _ {
+            addText("Failed")
+        }
 
         // Do any additional setup after loading the view.
     }

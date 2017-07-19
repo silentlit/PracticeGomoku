@@ -13,7 +13,6 @@
 		0731E4E01F1D9DD800437BDF /* Black.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0731E4DF1F1D9DD800437BDF /* Black.swift */; };
 		0731E4E21F1D9DE300437BDF /* White.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0731E4E11F1D9DE300437BDF /* White.swift */; };
 		078073FF1F1D987800A5169D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 078073FE1F1D987800A5169D /* AppDelegate.swift */; };
-		078074011F1D987800A5169D /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 078074001F1D987800A5169D /* ViewController.swift */; };
 		078074041F1D987800A5169D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 078074021F1D987800A5169D /* Main.storyboard */; };
 		078074071F1D987800A5169D /* PracticeGomoku.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 078074051F1D987800A5169D /* PracticeGomoku.xcdatamodeld */; };
 		078074091F1D987800A5169D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 078074081F1D987800A5169D /* Assets.xcassets */; };
@@ -48,7 +47,6 @@
 		0731E4E11F1D9DE300437BDF /* White.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = White.swift; sourceTree = "<group>"; };
 		078073FB1F1D987800A5169D /* PracticeGomoku.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PracticeGomoku.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		078073FE1F1D987800A5169D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		078074001F1D987800A5169D /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		078074031F1D987800A5169D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		078074061F1D987800A5169D /* PracticeGomoku.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = PracticeGomoku.xcdatamodel; sourceTree = "<group>"; };
 		078074081F1D987800A5169D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -94,12 +92,10 @@
 		0731E4DB1F1D9C9500437BDF /* View */ = {
 			isa = PBXGroup;
 			children = (
-				078074001F1D987800A5169D /* ViewController.swift */,
+				075A0F951F1EECCE00767127 /* TCP/IP */,
 				078074021F1D987800A5169D /* Main.storyboard */,
 				078074081F1D987800A5169D /* Assets.xcassets */,
 				0780740A1F1D987800A5169D /* LaunchScreen.storyboard */,
-				0712914E1F1DB56100B37C4F /* ServerVC.swift */,
-				071291501F1DB56D00B37C4F /* ClientVC.swift */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -112,6 +108,15 @@
 				0731E4E11F1D9DE300437BDF /* White.swift */,
 			);
 			name = Chess;
+			sourceTree = "<group>";
+		};
+		075A0F951F1EECCE00767127 /* TCP/IP */ = {
+			isa = PBXGroup;
+			children = (
+				0712914E1F1DB56100B37C4F /* ServerVC.swift */,
+				071291501F1DB56D00B37C4F /* ClientVC.swift */,
+			);
+			name = TCP/IP;
 			sourceTree = "<group>";
 		};
 		078073F21F1D987800A5169D = {
@@ -373,7 +378,6 @@
 				0731E4E01F1D9DD800437BDF /* Black.swift in Sources */,
 				0731E4DE1F1D9D9800437BDF /* Chess.swift in Sources */,
 				078074071F1D987800A5169D /* PracticeGomoku.xcdatamodeld in Sources */,
-				078074011F1D987800A5169D /* ViewController.swift in Sources */,
 				078073FF1F1D987800A5169D /* AppDelegate.swift in Sources */,
 				0731E4E21F1D9DE300437BDF /* White.swift in Sources */,
 			);
