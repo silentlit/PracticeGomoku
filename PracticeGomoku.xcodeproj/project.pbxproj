@@ -21,6 +21,7 @@
 		0780740C1F1D987800A5169D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0780740A1F1D987800A5169D /* LaunchScreen.storyboard */; };
 		078074171F1D987800A5169D /* PracticeGomokuTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 078074161F1D987800A5169D /* PracticeGomokuTests.swift */; };
 		078074221F1D987800A5169D /* PracticeGomokuUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 078074211F1D987800A5169D /* PracticeGomokuUITests.swift */; };
+		07956D421F2038A500CAAB03 /* CalculateFuncs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07956D411F2038A500CAAB03 /* CalculateFuncs.swift */; };
 		919BB472BC416CB1F3CD0CD7 /* Pods_PracticeGomoku.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84D16C824CB7DB0BE0146CF8 /* Pods_PracticeGomoku.framework */; };
 /* End PBXBuildFile section */
 
@@ -62,6 +63,7 @@
 		0780741D1F1D987800A5169D /* PracticeGomokuUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PracticeGomokuUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		078074211F1D987800A5169D /* PracticeGomokuUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeGomokuUITests.swift; sourceTree = "<group>"; };
 		078074231F1D987800A5169D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		07956D411F2038A500CAAB03 /* CalculateFuncs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalculateFuncs.swift; sourceTree = "<group>"; };
 		84D16C824CB7DB0BE0146CF8 /* Pods_PracticeGomoku.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PracticeGomoku.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8535A6764F5117798DB93B06 /* Pods-PracticeGomoku.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PracticeGomoku.release.xcconfig"; path = "Pods/Target Support Files/Pods-PracticeGomoku/Pods-PracticeGomoku.release.xcconfig"; sourceTree = "<group>"; };
 		FA98E0E14FBF1C8570359CD2 /* Pods-PracticeGomoku.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PracticeGomoku.debug.xcconfig"; path = "Pods/Target Support Files/Pods-PracticeGomoku/Pods-PracticeGomoku.debug.xcconfig"; sourceTree = "<group>"; };
@@ -100,6 +102,7 @@
 				078074021F1D987800A5169D /* Main.storyboard */,
 				078074081F1D987800A5169D /* Assets.xcassets */,
 				0780740A1F1D987800A5169D /* LaunchScreen.storyboard */,
+				07956D411F2038A500CAAB03 /* CalculateFuncs.swift */,
 				075A0F961F1EED4900767127 /* BlackVC.swift */,
 				075A0F981F1EED5500767127 /* WhiteVC.swift */,
 			);
@@ -379,6 +382,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				07956D421F2038A500CAAB03 /* CalculateFuncs.swift in Sources */,
 				0712914F1F1DB56100B37C4F /* ServerVC.swift in Sources */,
 				071291511F1DB56D00B37C4F /* ClientVC.swift in Sources */,
 				0731E4E01F1D9DD800437BDF /* Black.swift in Sources */,

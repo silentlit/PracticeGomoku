@@ -7,50 +7,32 @@
 //
 
 import UIKit
+import CocoaAsyncSocket
 
 class BlackVC: UIViewController
 {
-    //当前屏幕宽度
-    var screenWidth: CGFloat {
-        return UIScreen.mainScreen().bounds.width
-    }
-    //当前屏幕高度
-    var screenHeight: CGFloat {
-        return UIScreen.mainScreen().bounds.height
-    }
-    //计算棋盘的大小
-    var chessboardWidth: CGFloat {
-        return min(screenWidth, screenHeight)
-    }
-    //计算棋子大小
-    var chessWidth: CGFloat {
-        return chessboardWidth / 17 //魔数
-    }
-    //计算缩放比例
-    var scale: Double {
-        return (Double(chessboardWidth) / 535) //535为棋盘素材大小
-    }
-    //计算留白大小
-    var blankWidth: CGFloat {
-        return CGFloat(22) * CGFloat(scale) //22为棋盘素材留白大小
-    }
-    //计算网格大小
-    var squareWidth: CGFloat {
-        return (CGFloat(535) * CGFloat(scale) - 2 * blankWidth) / 14 //14格
-    }
-    //计算棋子之间的间距
-    var chessBy: CGFloat {
-        return squareWidth - chessWidth
-    }
-
+    var serverSocket: GCDAsyncSocket?
+    var clientSocket: GCDAsyncSocket?
+    
     //棋盘
     @IBOutlet weak var blackChessBoard: UIImageView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        let temCalc = Calc(tapPoint: CGPoint(), frameOfSelfView: self.view.frame)
+        let chessboardWidth = temCalc.chessboardWidth
         blackChessBoard.bounds.size = CGSize(width: chessboardWidth, height: chessboardWidth)
         // Do any additional setup after loading the view.
+        
+        //开始监听
+        serverSocket = GCDAsyncSocket(delegate: self, delegateQueue: dispatch_get_main_queue())
+        
+        do {
+            try serverSocket?.acceptOnPort(UInt16(1234))
+            print("Success")
+        } catch _ {
+            print("Failed")
+        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -61,28 +43,18 @@ class BlackVC: UIViewController
     //落子
     @IBAction func tapChessboard(sender: UIGestureRecognizer) {
         let location: CGPoint = sender.locationInView(self.view) //tap的真实坐标
-        let absLocation: CGPoint = CGPoint(calculateChessAbsLocation(location))//抽象棋盘的坐标
-        print("\(location)->\(absLocation)")
+        var calcFunc = Calc(tapPoint: location, frameOfSelfView: self.view.frame) //初始化计算
+        let formatLocation = calcFunc.absLocationTransformToRealLocation() //获取tap规范化后坐标
         
-        //计算出 真实棋盘坐标 = f(抽象坐标)
-        let x = blankWidth + (absLocation.x - 1) * squareWidth - chessWidth / 2
-        let y = self.view.frame.midY - (8 - absLocation.y) * squareWidth - chessWidth / 2
-        print((x, y))
+        print(calcFunc.tapLocation, calcFunc.absLocation)
         
         //将棋子添加到棋盘上
         let blackChess = UIImageView()
-        blackChess.frame = CGRectMake(x, y, chessWidth, chessWidth)
+        let chessWidth = calcFunc.chessWidth
+        blackChess.frame = CGRectMake(formatLocation.x, formatLocation.y, chessWidth, chessWidth)
         blackChess.image = UIImage(named: "black")
         self.view.addSubview(blackChess)
     }
-    
-    //计算抽象的落子位置
-    func calculateChessAbsLocation(location: CGPoint) -> (x: Int, y: Int) {
-        let x: Int = 8 + Int((location.x - self.view.frame.midX) / chessWidth)
-        let y: Int = 8 + Int((location.y - self.view.frame.midY) / chessWidth)
-        return (x, y)
-    }
-    
 
     /*
     // MARK: - Navigation
@@ -94,4 +66,29 @@ class BlackVC: UIViewController
     }
     */
 
+}
+
+extension BlackVC: GCDAsyncSocketDelegate {
+    //接收到新的socket连接时执行
+    func socket(sock: GCDAsyncSocket, didAcceptNewSocket newSocket: GCDAsyncSocket) {
+        print("Connect succeed")
+        if let h = newSocket.connectedHost {
+            print("Host: " + String(h))
+            print("Port: " + String(newSocket.connectedPort))
+        }
+        
+        //第一次读取data
+        clientSocket = newSocket
+        clientSocket?.readDataWithTimeout(-1, tag: 0)
+    }
+    
+    //再次读取data
+    func socket(sock: GCDAsyncSocket, didReadData data: NSData, withTag tag: Int) {
+        if let msg = String.init(data: data, encoding: NSUTF8StringEncoding) {
+            print(msg)
+            
+            //循环读取
+            sock.readDataWithTimeout(-1, tag: 0)
+        }
+    }
 }
