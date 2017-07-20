@@ -157,16 +157,25 @@
                             </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="tg4-Ga-0Gb" firstAttribute="leading" secondItem="evm-hT-VCu" secondAttribute="leading" id="d4o-w5-3h3"/>
                             <constraint firstAttribute="trailing" secondItem="tg4-Ga-0Gb" secondAttribute="trailing" id="hsZ-7L-U1I"/>
                             <constraint firstItem="vig-i5-xLB" firstAttribute="top" secondItem="tg4-Ga-0Gb" secondAttribute="bottom" constant="2" id="jcH-SR-qEP"/>
                             <constraint firstItem="tg4-Ga-0Gb" firstAttribute="centerY" secondItem="evm-hT-VCu" secondAttribute="centerY" id="sCS-9G-Vef"/>
                         </constraints>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="bgn-LG-5EH" appends="YES" id="Run-Ow-Uxx"/>
+                        </connections>
                     </view>
                     <tabBarItem key="tabBarItem" title="white" id="z1j-ts-yCy"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xpT-fP-I3r" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="bgn-LG-5EH">
+                    <connections>
+                        <action selector="tapChessboard:" destination="9VG-0y-2n1" id="lts-VN-nhf"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="-58" y="1613"/>
         </scene>

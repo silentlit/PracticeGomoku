@@ -41,6 +41,23 @@ class WhiteVC: UIViewController
         // Dispose of any resources that can be recreated.
     }
     
+    //落子
+    @IBAction func tapChessboard(sender: UITapGestureRecognizer) {
+        let location: CGPoint = sender.locationInView(self.view) //tap的真实坐标
+        whiteCalcFunc = Calc(tapPoint: location, frameOfSelfView: self.view.frame) //初始化计算
+        let formatLocation = whiteCalcFunc.absLocationTransformToRealLocation(false) //获取tap规范化后坐标
+        
+        //将棋子添加到棋盘上
+        let whiteChess = UIImageView()
+        let chessWidth = whiteCalcFunc.chessWidth
+        whiteChess.frame = CGRectMake(formatLocation.x, formatLocation.y, chessWidth, chessWidth)
+        whiteChess.image = UIImage(named: "white")
+        self.view.addSubview(whiteChess)
+        
+        //落子位置发送给黑子
+        sendMsgToServer("drawWhite,\(whiteCalcFunc.absLocation.x),\(whiteCalcFunc.absLocation.y)")
+    }
+    
     //将黑子画出来
     func drawBlack() {
 //        print(blackCalcFunc.absLocation)
@@ -54,6 +71,12 @@ class WhiteVC: UIViewController
         self.view.addSubview(blackChess)
     }
     
+    //消息发送给server
+    func sendMsgToServer(msg: String) {
+        if let data = msg.dataUsingEncoding(NSUTF8StringEncoding) {
+            clientSocket?.writeData(data, withTimeout: -1, tag: 0)
+        }
+    }
 
     /*
     // MARK: - Navigation

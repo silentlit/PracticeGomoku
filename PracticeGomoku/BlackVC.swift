@@ -67,13 +67,22 @@ class BlackVC: UIViewController
         sendMsgToClient("drawBlack,\(blackCalcFunc.absLocation.x),\(blackCalcFunc.absLocation.y)")
     }
     
-    //将黑子抽象位置信息发送给client
+    //将信息发送给client
     func sendMsgToClient(msg: String) {
-//        let msg = "\(blackCalcFunc.absLocation.x),\(blackCalcFunc.absLocation.y)"
-        
         if let data = msg.dataUsingEncoding(NSUTF8StringEncoding) {
             clientSocket?.writeData(data, withTimeout: -1, tag: 0)
         }
+    }
+    
+    //画白子
+    func drawWhite() {
+        let whiteChess = UIImageView()
+        let chessWidth = whiteCalcFunc.chessWidth
+        let formatLocation = whiteCalcFunc.absLocationTransformToRealLocation(true)
+        
+        whiteChess.frame = CGRectMake(formatLocation.x, formatLocation.y, chessWidth, chessWidth)
+        whiteChess.image = UIImage(named: "white")
+        self.view.addSubview(whiteChess)
     }
 
     /*
@@ -105,7 +114,19 @@ extension BlackVC: GCDAsyncSocketDelegate {
     //再次读取data
     func socket(sock: GCDAsyncSocket, didReadData data: NSData, withTag tag: Int) {
         if let msg = String.init(data: data, encoding: NSUTF8StringEncoding) {
-            print(msg)
+            let info = msg.componentsSeparatedByString(",")
+            let condition = info.first ?? ""
+            
+            //根据condition选择功能
+            switch condition {
+            case "drawWhite":
+                whiteCalcFunc.absLocation.x = Int(info[1])!
+                whiteCalcFunc.absLocation.y = Int(info[2])!
+                drawWhite()
+                
+            default:
+                break
+            }
             
             //循环读取
             sock.readDataWithTimeout(-1, tag: 0)
