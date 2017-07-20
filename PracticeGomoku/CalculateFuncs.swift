@@ -80,8 +80,8 @@ struct Calc {
     }
     
     //计算出 真实棋盘坐标 = f(抽象坐标)
-    mutating func absLocationTransformToRealLocation() -> CGPoint {
-        let absL = calculateChessAbsLocation() 
+    mutating func absLocationTransformToRealLocation(absHasBeenCaculatedOrNot: Bool) -> CGPoint {
+        let absL = (absHasBeenCaculatedOrNot ? CGPoint(x: absLocation.x, y: absLocation.y) : calculateChessAbsLocation())
         let x = blankWidth + (absL.x - 1) * squareWidth - chessWidth / 2
         let y = frameOfView.midY - (8 - absL.y) * squareWidth - chessWidth / 2
         return CGPoint(x: x, y: y)

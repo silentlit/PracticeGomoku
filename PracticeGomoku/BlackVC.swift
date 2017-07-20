@@ -11,17 +11,25 @@ import CocoaAsyncSocket
 
 class BlackVC: UIViewController
 {
-    var serverSocket: GCDAsyncSocket?
-    var clientSocket: GCDAsyncSocket?
+    var serverSocket: GCDAsyncSocket? //黑子
+    var clientSocket: GCDAsyncSocket? //白子
+    
+    var blackCalcFunc: Calc!
+    var whiteCalcFunc: Calc!
     
     //棋盘
     @IBOutlet weak var blackChessBoard: UIImageView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let temCalc = Calc(tapPoint: CGPoint(), frameOfSelfView: self.view.frame)
-        let chessboardWidth = temCalc.chessboardWidth
-        blackChessBoard.bounds.size = CGSize(width: chessboardWidth, height: chessboardWidth)
+        
+        blackCalcFunc = Calc(tapPoint: CGPoint(), frameOfSelfView: self.view.frame)
+        whiteCalcFunc = Calc(tapPoint: CGPoint(), frameOfSelfView: self.view.frame)
+        
+//        blackCalcFunc = Calc(tapPoint: CGPoint(), frameOfSelfView: self.view.frame)
+//        let temCalc = Calc(tapPoint: CGPoint(), frameOfSelfView: self.view.frame)
+//        let chessboardWidth = temCalc.chessboardWidth
+//        blackChessBoard.bounds.size = CGSize(width: chessboardWidth, height: chessboardWidth)
         // Do any additional setup after loading the view.
         
         //开始监听
@@ -29,9 +37,9 @@ class BlackVC: UIViewController
         
         do {
             try serverSocket?.acceptOnPort(UInt16(1234))
-            print("Success")
+            print("Listen Success")
         } catch _ {
-            print("Failed")
+            print("Listen Failed")
         }
     }
 
@@ -43,17 +51,29 @@ class BlackVC: UIViewController
     //落子
     @IBAction func tapChessboard(sender: UIGestureRecognizer) {
         let location: CGPoint = sender.locationInView(self.view) //tap的真实坐标
-        var calcFunc = Calc(tapPoint: location, frameOfSelfView: self.view.frame) //初始化计算
-        let formatLocation = calcFunc.absLocationTransformToRealLocation() //获取tap规范化后坐标
+        blackCalcFunc = Calc(tapPoint: location, frameOfSelfView: self.view.frame) //初始化计算
+        let formatLocation = blackCalcFunc.absLocationTransformToRealLocation(false) //获取tap规范化后坐标
         
-        print(calcFunc.tapLocation, calcFunc.absLocation)
+//        print(calcFunc.tapLocation, calcFunc.absLocation)
         
         //将棋子添加到棋盘上
         let blackChess = UIImageView()
-        let chessWidth = calcFunc.chessWidth
+        let chessWidth = blackCalcFunc.chessWidth
         blackChess.frame = CGRectMake(formatLocation.x, formatLocation.y, chessWidth, chessWidth)
         blackChess.image = UIImage(named: "black")
         self.view.addSubview(blackChess)
+        
+        //落子位置发送给白子
+        sendMsgToClient("drawBlack,\(blackCalcFunc.absLocation.x),\(blackCalcFunc.absLocation.y)")
+    }
+    
+    //将黑子抽象位置信息发送给client
+    func sendMsgToClient(msg: String) {
+//        let msg = "\(blackCalcFunc.absLocation.x),\(blackCalcFunc.absLocation.y)"
+        
+        if let data = msg.dataUsingEncoding(NSUTF8StringEncoding) {
+            clientSocket?.writeData(data, withTimeout: -1, tag: 0)
+        }
     }
 
     /*
@@ -71,7 +91,7 @@ class BlackVC: UIViewController
 extension BlackVC: GCDAsyncSocketDelegate {
     //接收到新的socket连接时执行
     func socket(sock: GCDAsyncSocket, didAcceptNewSocket newSocket: GCDAsyncSocket) {
-        print("Connect succeed")
+        print("Server Connect succeed")
         if let h = newSocket.connectedHost {
             print("Host: " + String(h))
             print("Port: " + String(newSocket.connectedPort))
