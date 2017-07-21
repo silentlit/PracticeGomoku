@@ -16,11 +16,15 @@ class Chess
 {
     var chessColor: Color
     
+    var username: String
+    
     init() {
         self.chessColor = Color.none
+        username = ""
     }
     
-    init(c: Color) {
+    init(c: Color, username: String) {
         self.chessColor = c
+        self.username = username
     }
 }

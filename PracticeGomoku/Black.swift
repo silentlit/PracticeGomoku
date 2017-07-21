@@ -10,7 +10,7 @@ import Foundation
 
 class Black: Chess
 {
-    override init() {
-        super.init(c: Color.black)
+    init(username: String) {
+        super.init(c: Color.black, username: "b\(username)")
     }
 }

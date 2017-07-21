@@ -11,7 +11,13 @@ import CocoaAsyncSocket
 
 class BlackVC: UIViewController
 {
-    var clientSocket: GCDAsyncSocket? //白子
+    var clientSocket: GCDAsyncSocket? //黑
+    
+    var black: Black!
+    
+    var username: String?
+    var model: String?
+    var color: String?
     
     var blackCalcFunc: Calc!
     var whiteCalcFunc: Calc!
@@ -115,6 +121,7 @@ extension BlackVC: GCDAsyncSocketDelegate {
         whiteCalcFunc = Calc(tapPoint: CGPoint(), frameOfSelfView: self.view.frame)
         print("Connect to server " + host)
         clientSocket?.readDataWithTimeout(-1, tag: 0)
+        sendMsgToServer("username,b\(username!)")
     }
     
     //读取server消息
@@ -125,7 +132,7 @@ extension BlackVC: GCDAsyncSocketDelegate {
             
             //根据condition选择功能
             switch condition {
-            case "drawBlack": //画黑子
+            case "drawWhite": //画黑子
                 whiteCalcFunc.absLocation.x = Int(info[1])!
                 whiteCalcFunc.absLocation.y = Int(info[2])!
                 drawWhite()

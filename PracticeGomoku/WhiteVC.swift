@@ -11,7 +11,13 @@ import CocoaAsyncSocket
 
 class WhiteVC: UIViewController
 {
-    var clientSocket: GCDAsyncSocket? //白子
+    var clientSocket: GCDAsyncSocket? //白
+    
+    var white: White!
+    
+    var username: String?
+    var model: String?
+    var color: String?
     
     var blackCalcFunc: Calc!
     var whiteCalcFunc: Calc!
@@ -107,6 +113,7 @@ extension WhiteVC: GCDAsyncSocketDelegate {
         blackCalcFunc = Calc(tapPoint: CGPoint(), frameOfSelfView: self.view.frame)
         print("Connect to server " + host)
         clientSocket?.readDataWithTimeout(-1, tag: 0)
+        sendMsgToServer("username,w\(username!)")
     }
     
     //读取server消息
