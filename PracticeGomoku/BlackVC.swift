@@ -11,7 +11,6 @@ import CocoaAsyncSocket
 
 class BlackVC: UIViewController
 {
-    var serverSocket: GCDAsyncSocket? //黑子
     var clientSocket: GCDAsyncSocket? //白子
     
     var blackCalcFunc: Calc!
@@ -32,14 +31,15 @@ class BlackVC: UIViewController
 //        blackChessBoard.bounds.size = CGSize(width: chessboardWidth, height: chessboardWidth)
         // Do any additional setup after loading the view.
         
-        //开始监听
-        serverSocket = GCDAsyncSocket(delegate: self, delegateQueue: dispatch_get_main_queue())
+        //开始连接
+        clientSocket = GCDAsyncSocket(delegate: self, delegateQueue: dispatch_get_main_queue())
         
         do {
-            try serverSocket?.acceptOnPort(UInt16(1234))
-            print("Listen Success")
+            try clientSocket?.connectToHost("172.168.70.111", onPort: UInt16(1234))
+            print("Client connect Success")
+            
         } catch _ {
-            print("Listen Failed")
+            print("Client connect Failed")
         }
     }
 
@@ -64,14 +64,26 @@ class BlackVC: UIViewController
         self.view.addSubview(blackChess)
         
         //落子位置发送给白子
-        sendMsgToClient("drawBlack,\(blackCalcFunc.absLocation.x),\(blackCalcFunc.absLocation.y)")
+        sendMsgToServer("drawBlack,\(blackCalcFunc.absLocation.x),\(blackCalcFunc.absLocation.y)")
     }
     
     //将信息发送给client
-    func sendMsgToClient(msg: String) {
+    func sendMsgToServer(msg: String) {
+//        clientSocket = GCDAsyncSocket(delegate: self, delegateQueue: dispatch_get_main_queue())
+//        
+//        do {
+//            try clientSocket?.connectToHost("172.168.70.47", onPort: UInt16(1234))
+//            print("Client connect Success")
+//            
+//        } catch _ {
+//            print("Client connect Failed")
+//        }
+        
         if let data = msg.dataUsingEncoding(NSUTF8StringEncoding) {
             clientSocket?.writeData(data, withTimeout: -1, tag: 0)
         }
+//        clientSocket?.disconnect()
+//        clientSocket = nil
     }
     
     //画白子
@@ -98,28 +110,22 @@ class BlackVC: UIViewController
 }
 
 extension BlackVC: GCDAsyncSocketDelegate {
-    //接收到新的socket连接时执行
-    func socket(sock: GCDAsyncSocket, didAcceptNewSocket newSocket: GCDAsyncSocket) {
-        print("Server Connect succeed")
-        if let h = newSocket.connectedHost {
-            print("Host: " + String(h))
-            print("Port: " + String(newSocket.connectedPort))
-        }
-        
-        //第一次读取data
-        clientSocket = newSocket
+    //建立连接后
+    func socket(sock: GCDAsyncSocket, didConnectToHost host: String, port: UInt16) {
+        whiteCalcFunc = Calc(tapPoint: CGPoint(), frameOfSelfView: self.view.frame)
+        print("Connect to server " + host)
         clientSocket?.readDataWithTimeout(-1, tag: 0)
     }
     
-    //再次读取data
+    //读取server消息
     func socket(sock: GCDAsyncSocket, didReadData data: NSData, withTag tag: Int) {
-        if let msg = String.init(data: data, encoding: NSUTF8StringEncoding) {
+        if let msg = String(data: data, encoding: NSUTF8StringEncoding) {
             let info = msg.componentsSeparatedByString(",")
             let condition = info.first ?? ""
             
             //根据condition选择功能
             switch condition {
-            case "drawWhite":
+            case "drawBlack": //画黑子
                 whiteCalcFunc.absLocation.x = Int(info[1])!
                 whiteCalcFunc.absLocation.y = Int(info[2])!
                 drawWhite()
@@ -128,8 +134,7 @@ extension BlackVC: GCDAsyncSocketDelegate {
                 break
             }
             
-            //循环读取
-            sock.readDataWithTimeout(-1, tag: 0)
+            clientSocket?.readDataWithTimeout(-1, tag: 0)
         }
     }
 }

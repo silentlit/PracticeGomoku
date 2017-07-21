@@ -73,9 +73,20 @@ class WhiteVC: UIViewController
     
     //消息发送给server
     func sendMsgToServer(msg: String) {
+//        clientSocket = GCDAsyncSocket(delegate: self, delegateQueue: dispatch_get_main_queue())
+//        
+//        do {
+//            try clientSocket?.connectToHost("127.0.0.1", onPort: UInt16(1234))
+//            print("Client connect Success")
+//            
+//        } catch _ {
+//            print("Client connect Failed")
+//        }
         if let data = msg.dataUsingEncoding(NSUTF8StringEncoding) {
             clientSocket?.writeData(data, withTimeout: -1, tag: 0)
         }
+//        clientSocket?.disconnect()
+//        clientSocket = nil
     }
 
     /*
@@ -114,7 +125,7 @@ extension WhiteVC: GCDAsyncSocketDelegate {
             default:
                 break
             }
-            
+//            clientSocket?.disconnect()
             clientSocket?.readDataWithTimeout(-1, tag: 0)
         }
     }
