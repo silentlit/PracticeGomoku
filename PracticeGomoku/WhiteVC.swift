@@ -13,17 +13,23 @@ class WhiteVC: UIViewController
 {
     var clientSocket: GCDAsyncSocket? //白
     
-    var white: White!
+    var white: Chess?
     
     var username: String?
     var model: String?
     var color: String?
+    var ip: String?
+    
+    var redDot = UIImageView()
     
     var blackCalcFunc: Calc!
     var whiteCalcFunc: Calc!
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.view.userInteractionEnabled = false
+        white = Chess(c: Color.white, username: username!)
+        color = "white"
         
         blackCalcFunc = Calc(tapPoint: CGPoint(), frameOfSelfView: self.view.frame)
         whiteCalcFunc = Calc(tapPoint: CGPoint(), frameOfSelfView: self.view.frame)
@@ -34,7 +40,7 @@ class WhiteVC: UIViewController
         clientSocket = GCDAsyncSocket(delegate: self, delegateQueue: dispatch_get_main_queue())
         
         do {
-            try clientSocket?.connectToHost("127.0.0.1", onPort: UInt16(1234))
+            try clientSocket?.connectToHost(ip!, onPort: UInt16(1234))
             print("Client connect Success")
             
         } catch _ {
@@ -53,15 +59,51 @@ class WhiteVC: UIViewController
         whiteCalcFunc = Calc(tapPoint: location, frameOfSelfView: self.view.frame) //初始化计算
         let formatLocation = whiteCalcFunc.absLocationTransformToRealLocation(false) //获取tap规范化后坐标
         
+        //检验落子合法性
+        if white?.isLegalOrNot(whiteCalcFunc.absLocation) == false {
+            return
+        }
+        
         //将棋子添加到棋盘上
         let whiteChess = UIImageView()
         let chessWidth = whiteCalcFunc.chessWidth
         whiteChess.frame = CGRectMake(formatLocation.x, formatLocation.y, chessWidth, chessWidth)
         whiteChess.image = UIImage(named: "white")
+        whiteChess.image?.accessibilityIdentifier = "white"
         self.view.addSubview(whiteChess)
+        
+        //绘制当前点
+        drawRedDot(formatLocation, chessWidth: chessWidth)
+        
+        //落子完成设置为不可交互
+        self.view.userInteractionEnabled = false
+        
+        //添加棋子到抽象棋盘上
+        white?.addChess(whiteCalcFunc.absLocation, chess: whiteChess)
         
         //落子位置发送给黑子
         sendMsgToServer("drawWhite,\(whiteCalcFunc.absLocation.x),\(whiteCalcFunc.absLocation.y)")
+        
+        //胜负
+        if didIWin() == true {
+            sendMsgToServer("whiteWin")
+            let alert = UIAlertView()
+            alert.title = "You Win"
+            alert.message = "game over"
+            alert.addButtonWithTitle("Done")
+            alert.show()
+            self.view.userInteractionEnabled = false
+        }
+    }
+    
+    //绘制红点表明最新的落子位置
+    func drawRedDot(formartLocation: CGPoint, chessWidth: CGFloat) {
+        redDot.removeFromSuperview()
+        let x = formartLocation.x + chessWidth / 2.4
+        let y = formartLocation.y + chessWidth / 2.4
+        redDot.frame = CGRectMake(x, y, chessWidth / 5.5, chessWidth / 5.5)
+        redDot.image = UIImage(named: "redDot")
+        self.view.addSubview(redDot)
     }
     
     //将黑子画出来
@@ -75,6 +117,16 @@ class WhiteVC: UIViewController
         blackChess.frame = CGRectMake(formatLocation.x, formatLocation.y, chessWidth, chessWidth)
         blackChess.image = UIImage(named: "black")
         self.view.addSubview(blackChess)
+        self.view.userInteractionEnabled = true
+        
+        drawRedDot(formatLocation, chessWidth: chessWidth)
+        
+        white?.addChess(blackCalcFunc.absLocation, chess: blackChess)
+    }
+    
+    //胜负判定
+    func didIWin() -> Bool {
+        return (white?.didWinOrNot(whiteCalcFunc.absLocation, color: color!))!
     }
     
     //消息发送给server
@@ -93,6 +145,16 @@ class WhiteVC: UIViewController
         }
 //        clientSocket?.disconnect()
 //        clientSocket = nil
+    }
+    
+    //黑棋胜利
+    func blackWin() {
+        let alert = UIAlertView()
+        alert.title = "You Lose"
+        alert.message = "game over"
+        alert.addButtonWithTitle("Done")
+        alert.show()
+        self.view.userInteractionEnabled = false
     }
 
     /*
@@ -128,6 +190,12 @@ extension WhiteVC: GCDAsyncSocketDelegate {
                 blackCalcFunc.absLocation.x = Int(info[1])!
                 blackCalcFunc.absLocation.y = Int(info[2])!
                 drawBlack()
+                
+            case "whiteEnable":
+                self.view.userInteractionEnabled = true
+                
+            case "blackWin":
+                blackWin()
                 
             default:
                 break

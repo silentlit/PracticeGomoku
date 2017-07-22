@@ -15,6 +15,8 @@ class ColorVC: UIViewController {
     var model: String?
     
     var color: String?
+    
+    var ip: String?
 
     @IBAction func black(sender: AnyObject) {
         color = "black"
@@ -28,13 +30,18 @@ class ColorVC: UIViewController {
         if let destination = segue.destinationViewController as? BlackVC {
             destination.username = username
             destination.model = model
+            if model == "single" {
+                destination.view.userInteractionEnabled = true
+            }
             destination.color = color
             destination.black = Black(username: username!)
+            destination.ip = ip
         } else if let destination = segue.destinationViewController as? WhiteVC {
             destination.username = username
             destination.model = model
             destination.color = color
             destination.white = White(username: username!)
+            destination.ip = ip
         }
     }
     

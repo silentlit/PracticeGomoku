@@ -10,6 +10,8 @@ import Foundation
 
 class White: Chess
 {
+//    var location = [String: White]()
+    
     init(username: String) {
         super.init(c: Color.white, username: "w\(username)")
     }

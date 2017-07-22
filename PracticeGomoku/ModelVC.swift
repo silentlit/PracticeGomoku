@@ -13,6 +13,8 @@ class ModelVC: UIViewController {
     var username: String?
     
     var model: String?
+    
+    var ip: String?
 
     @IBAction func multi(sender: AnyObject) {
         model = "multi"
@@ -26,6 +28,7 @@ class ModelVC: UIViewController {
         if let destination = segue.destinationViewController as? ColorVC {
             destination.username = username
             destination.model = model
+            destination.ip = ip
         }
     }
     
