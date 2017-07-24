@@ -51,7 +51,7 @@ class BlackVC: UIViewController
         clientSocket = GCDAsyncSocket(delegate: self, delegateQueue: dispatch_get_main_queue())
         
         do {
-            try clientSocket?.connectToHost(ip!, onPort: UInt16(1234))
+            try clientSocket?.connectToHost("192.168.0.104", onPort: UInt16(1234))
             print("Client connect Success")
             
         } catch _ {
@@ -86,13 +86,13 @@ class BlackVC: UIViewController
         self.view.addSubview(blackChess)
         
         //绘制当前点
-        drawRedDot(formatLocation, chessWidth: chessWidth)
+        drawRedDot(formatLocation, chessWidth: chessWidth, chess: blackChess)
         
         //落子完成设置为不可交互
         self.view.userInteractionEnabled = false
         
         //添加棋子到抽象棋盘上
-        black?.addChess(blackCalcFunc.absLocation, chess: blackChess)
+//        black?.addChess(blackCalcFunc.absLocation, chess: blackChess)
         
         //落子位置发送给白子
         sendMsgToServer("drawBlack,\(blackCalcFunc.absLocation.x),\(blackCalcFunc.absLocation.y)")
@@ -110,13 +110,18 @@ class BlackVC: UIViewController
     }
     
     //绘制红点表明最新的落子位置
-    func drawRedDot(formartLocation: CGPoint, chessWidth: CGFloat) {
+    func drawRedDot(formartLocation: CGPoint, chessWidth: CGFloat, chess: UIImageView) {
         redDot.removeFromSuperview()
         let x = formartLocation.x + chessWidth / 2.4
         let y = formartLocation.y + chessWidth / 2.4
         redDot.frame = CGRectMake(x, y, chessWidth / 5.5, chessWidth / 5.5)
         redDot.image = UIImage(named: "redDot")
         self.view.addSubview(redDot)
+        
+        //添加落子位置[abs(x, y): chess] 以及 红点位置 redDotLocation到抽象棋盘中
+        let absPoint = chess.image?.accessibilityIdentifier == "black" ? blackCalcFunc.absLocation: whiteCalcFunc.absLocation
+        black?.addChess(absPoint, chess: chess, redDotLocation: CGPoint(x: x, y: y))
+//        print(blackCalcFunc.absLocation)
     }
     
     //胜负判定
@@ -151,12 +156,13 @@ class BlackVC: UIViewController
         
         whiteChess.frame = CGRectMake(formatLocation.x, formatLocation.y, chessWidth, chessWidth)
         whiteChess.image = UIImage(named: "white")
+        whiteChess.image?.accessibilityIdentifier = "white"
         self.view.addSubview(whiteChess)
         self.view.userInteractionEnabled = true
         
-        drawRedDot(formatLocation, chessWidth: chessWidth)
+        drawRedDot(formatLocation, chessWidth: chessWidth, chess: whiteChess)
         
-        black?.addChess(whiteCalcFunc.absLocation, chess: whiteChess)
+//        black?.addChess(whiteCalcFunc.absLocation, chess: whiteChess)
     }
     
     //白棋胜利
@@ -169,6 +175,33 @@ class BlackVC: UIViewController
         self.view.userInteractionEnabled = false
     }
 
+    //悔棋 落子后悔棋出栈两次 落子前悔棋出栈三次 根据第一次出栈情况判定是否落子
+    @IBAction func undo(sender: AnyObject) {
+        if let firstPop = black?.popFromStack() { //(chess, chessAbsPointOfString)
+            redDot.removeFromSuperview()
+            firstPop.chess.removeFromSuperview()
+            if firstPop.chess.image?.accessibilityIdentifier == "black" { //落子后
+                if let secondPop = black?.popFromStack() {
+                    secondPop.chess.removeFromSuperview()
+                    let pointInfo = secondPop.chessAbsPointOfString.componentsSeparatedByString(",")
+                    whiteCalcFunc.absLocation.x = Int(pointInfo[0])!
+                    whiteCalcFunc.absLocation.y = Int(pointInfo[1])!
+                    drawWhite()
+                }
+            } else if firstPop.chess.image?.accessibilityIdentifier == "white" { //落子前
+                if let secondPop = black?.popFromStack() {
+                    secondPop.chess.removeFromSuperview()
+                    if let thirdPop = black?.popFromStack() {
+                        thirdPop.chess.removeFromSuperview()
+                        let pointInfo = thirdPop.chessAbsPointOfString.componentsSeparatedByString(",")
+                        whiteCalcFunc.absLocation.x = Int(pointInfo[0])!
+                        whiteCalcFunc.absLocation.y = Int(pointInfo[1])!
+                        drawWhite()
+                    }
+                }
+            }
+        }
+    }
     /*
     // MARK: - Navigation
 

@@ -73,13 +73,13 @@ class WhiteVC: UIViewController
         self.view.addSubview(whiteChess)
         
         //绘制当前点
-        drawRedDot(formatLocation, chessWidth: chessWidth)
+        drawRedDot(formatLocation, chessWidth: chessWidth, chess: whiteChess)
         
         //落子完成设置为不可交互
         self.view.userInteractionEnabled = false
         
         //添加棋子到抽象棋盘上
-        white?.addChess(whiteCalcFunc.absLocation, chess: whiteChess)
+//        white?.addChess(whiteCalcFunc.absLocation, chess: whiteChess)
         
         //落子位置发送给黑子
         sendMsgToServer("drawWhite,\(whiteCalcFunc.absLocation.x),\(whiteCalcFunc.absLocation.y)")
@@ -97,13 +97,17 @@ class WhiteVC: UIViewController
     }
     
     //绘制红点表明最新的落子位置
-    func drawRedDot(formartLocation: CGPoint, chessWidth: CGFloat) {
+    func drawRedDot(formartLocation: CGPoint, chessWidth: CGFloat, chess: UIImageView) {
         redDot.removeFromSuperview()
         let x = formartLocation.x + chessWidth / 2.4
         let y = formartLocation.y + chessWidth / 2.4
         redDot.frame = CGRectMake(x, y, chessWidth / 5.5, chessWidth / 5.5)
         redDot.image = UIImage(named: "redDot")
         self.view.addSubview(redDot)
+        
+        //添加落子位置[abs(x, y): chess] 以及 红点位置 redDotLocation到抽象棋盘中
+        let absPoint = chess.image?.accessibilityIdentifier == "black" ? blackCalcFunc.absLocation: whiteCalcFunc.absLocation
+        white?.addChess(absPoint, chess: chess, redDotLocation: CGPoint(x: x, y: y))
     }
     
     //将黑子画出来
@@ -116,12 +120,13 @@ class WhiteVC: UIViewController
 //        print(formatLocation)
         blackChess.frame = CGRectMake(formatLocation.x, formatLocation.y, chessWidth, chessWidth)
         blackChess.image = UIImage(named: "black")
+        blackChess.image?.accessibilityIdentifier = "black"
         self.view.addSubview(blackChess)
         self.view.userInteractionEnabled = true
         
-        drawRedDot(formatLocation, chessWidth: chessWidth)
+        drawRedDot(formatLocation, chessWidth: chessWidth, chess: blackChess)
         
-        white?.addChess(blackCalcFunc.absLocation, chess: blackChess)
+//        white?.addChess(blackCalcFunc.absLocation, chess: blackChess)
     }
     
     //胜负判定
@@ -157,6 +162,33 @@ class WhiteVC: UIViewController
         self.view.userInteractionEnabled = false
     }
 
+    //悔棋
+    @IBAction func undo(sender: AnyObject) {
+        if let firstPop = white?.popFromStack() { //(chess, chessAbsPointOfString)
+            redDot.removeFromSuperview()
+            firstPop.chess.removeFromSuperview()
+            if firstPop.chess.image?.accessibilityIdentifier == "white" { //落子后
+                if let secondPop = white?.popFromStack() {
+                    secondPop.chess.removeFromSuperview()
+                    let pointInfo = secondPop.chessAbsPointOfString.componentsSeparatedByString(",")
+                    blackCalcFunc.absLocation.x = Int(pointInfo[0])!
+                    blackCalcFunc.absLocation.y = Int(pointInfo[1])!
+                    drawBlack()
+                }
+            } else if firstPop.chess.image?.accessibilityIdentifier == "black" { //落子前
+                if let secondPop = white?.popFromStack() {
+                    secondPop.chess.removeFromSuperview()
+                    if let thirdPop = white?.popFromStack() {
+                        thirdPop.chess.removeFromSuperview()
+                        let pointInfo = thirdPop.chessAbsPointOfString.componentsSeparatedByString(",")
+                        blackCalcFunc.absLocation.x = Int(pointInfo[0])!
+                        blackCalcFunc.absLocation.y = Int(pointInfo[1])!
+                        drawBlack()
+                    }
+                }
+            }
+        }
+    }
     /*
     // MARK: - Navigation
 

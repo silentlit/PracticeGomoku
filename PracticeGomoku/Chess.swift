@@ -30,9 +30,11 @@ class Chess
     
     var username: String
     
-    var location = [String: UIImageView]() //字典 x,y -> UIImageView 检测落子合法性, 胜负判定
+    var location = [String: UIImageView]() //字典 abs(x,y) -> UIImageView 检测落子合法性, 胜负判定
     
-    var chessStack = [[String: UIImageView]]() //数组字典 [x,y -> UIImageView] 悔棋
+    var chessStack = [[String: UIImageView]]() //数组字典 [abs(x,y) -> UIImageView] 悔棋
+    
+    var redDotStack = [CGPoint]() //数组 (x,y) -> location 悔棋
     
     init() {
         self.chessColor = Color.none
@@ -44,11 +46,35 @@ class Chess
         self.username = username
     }
     
+//    //将ImageView redDotLocation添加进栈中
+//    func pushToStack(chessImgView: UIImageView, redDotLocation: String) {
+//        chessStack.append([pointToString: chessImgView])
+//    }
+    
+    //将ImageView redDotLocation出栈 抽象棋盘对应点设置为nil
+    func popFromStack() -> (chess: UIImageView, chessAbsPointOfString: String)? {
+        if chessStack.isEmpty == false {
+            //当前点参数
+            let chessAbsWithUIImgViewByDict = chessStack.removeLast()
+            
+            //将location对应点设置nil
+            let keys = Array(chessAbsWithUIImgViewByDict.keys)
+            let absPointOfString = keys.first!
+            location[absPointOfString] = nil
+            
+            //将当前点的imgView
+            let chessUIImgView = chessAbsWithUIImgViewByDict[absPointOfString]!
+            return (chessUIImgView, absPointOfString)
+        }
+        return nil
+    }
+    
     //向栈中添加棋子 悔棋可以pop处理，向字典中加入棋子 检测可以直接point得到
-    func addChess(point: (x: Int, y: Int), chess: UIImageView) {
+    func addChess(point: (x: Int, y: Int), chess: UIImageView, redDotLocation: CGPoint) {
         let pointOfString = pointToString(point)
         chessStack.append([pointOfString: chess])
         location[pointOfString] = chess
+//        print(point)
     }
     
     //将点坐标规范为String
