@@ -109,6 +109,14 @@ class WhiteVC: UIViewController
         let absPoint = chess.image?.accessibilityIdentifier == "black" ? blackCalcFunc.absLocation: whiteCalcFunc.absLocation
         white?.addChess(absPoint, chess: chess, redDotLocation: CGPoint(x: x, y: y))
     }
+    func drawRedDot(origin: CGPoint) {
+        let chessWidth = whiteCalcFunc.chessWidth
+        let x = origin.x + chessWidth / 2.4
+        let y = origin.y + chessWidth / 2.4
+        redDot.frame = CGRectMake(x, y, chessWidth / 5.5, chessWidth / 5.5)
+        redDot.image = UIImage(named: "redDot")
+        self.view.addSubview(redDot)
+    }
     
     //将黑子画出来
     func drawBlack() {
@@ -136,20 +144,9 @@ class WhiteVC: UIViewController
     
     //消息发送给server
     func sendMsgToServer(msg: String) {
-//        clientSocket = GCDAsyncSocket(delegate: self, delegateQueue: dispatch_get_main_queue())
-//        
-//        do {
-//            try clientSocket?.connectToHost("127.0.0.1", onPort: UInt16(1234))
-//            print("Client connect Success")
-//            
-//        } catch _ {
-//            print("Client connect Failed")
-//        }
         if let data = msg.dataUsingEncoding(NSUTF8StringEncoding) {
             clientSocket?.writeData(data, withTimeout: -1, tag: 0)
         }
-//        clientSocket?.disconnect()
-//        clientSocket = nil
     }
     
     //黑棋胜利
@@ -164,6 +161,11 @@ class WhiteVC: UIViewController
 
     //悔棋
     @IBAction func undo(sender: AnyObject) {
+        sendMsgToServer("whiteRequestUndo")
+    }
+    
+    //自身发出悔棋请求通过
+    func selfUndo() {
         if let firstPop = white?.popFromStack() { //(chess, chessAbsPointOfString)
             redDot.removeFromSuperview()
             firstPop.chess.removeFromSuperview()
@@ -189,6 +191,47 @@ class WhiteVC: UIViewController
             }
         }
     }
+    
+    //dict -> drawRedDot
+    func drawRedDotByDict(lastChessDict: [String : UIImageView]) {
+        let keys = Array(lastChessDict.keys)
+        let key = keys.first!
+        let chess = lastChessDict[key]!
+        let origin = chess.frame.origin
+        drawRedDot(origin)
+    }
+    
+    //对方发出悔棋请求通过
+    func blackUndo() {
+        self.view.userInteractionEnabled = false
+        if let firstPop = white?.popFromStack() {
+            redDot.removeFromSuperview()
+            firstPop.chess.removeFromSuperview()
+            if firstPop.chess.image?.accessibilityIdentifier == "white" { //落子后
+                if let secondPop = white?.popFromStack() {
+                    secondPop.chess.removeFromSuperview()
+                    if let lastChessDict = white?.chessStack.last {
+                        drawRedDotByDict(lastChessDict)
+                    }
+                }
+            } else if firstPop.chess.image?.accessibilityIdentifier == "black" { //落子前
+                if let lastChessDict = white?.chessStack.last {
+                    drawRedDotByDict(lastChessDict)
+                }
+            }
+        }
+    }
+    
+    //处理对方请求
+    func reqsCommitOrNot() {
+        let alertVC = UIAlertController(title: "黑子提出悔棋请求", message: "", preferredStyle: .Alert)
+        alertVC.addAction(UIAlertAction(title: "commit", style: UIAlertActionStyle.Default, handler: { action in
+            self.sendMsgToServer("whiteCommit")
+            self.blackUndo() }))
+        alertVC.addAction(UIAlertAction(title: "cancel", style: UIAlertActionStyle.Cancel, handler: nil))
+        self.presentViewController(alertVC, animated: true, completion: nil)
+    }
+    
     /*
     // MARK: - Navigation
 
@@ -218,16 +261,22 @@ extension WhiteVC: GCDAsyncSocketDelegate {
             
             //根据condition选择功能
             switch condition {
-            case "drawBlack": //画黑子
+            case "drawBlack" : //画黑子
                 blackCalcFunc.absLocation.x = Int(info[1])!
                 blackCalcFunc.absLocation.y = Int(info[2])!
                 drawBlack()
                 
-            case "whiteEnable":
+            case "whiteEnable" :
                 self.view.userInteractionEnabled = true
                 
-            case "blackWin":
+            case "blackWin" :
                 blackWin()
+                
+            case "blackRequestUndo" :
+                reqsCommitOrNot()
+                
+            case "blackCommit" :
+                selfUndo()
                 
             default:
                 break

@@ -41,17 +41,13 @@ class BlackVC: UIViewController
         blackCalcFunc = Calc(tapPoint: CGPoint(), frameOfSelfView: self.view.frame)
         whiteCalcFunc = Calc(tapPoint: CGPoint(), frameOfSelfView: self.view.frame)
         
-//        blackCalcFunc = Calc(tapPoint: CGPoint(), frameOfSelfView: self.view.frame)
-//        let temCalc = Calc(tapPoint: CGPoint(), frameOfSelfView: self.view.frame)
-//        let chessboardWidth = temCalc.chessboardWidth
-//        blackChessBoard.bounds.size = CGSize(width: chessboardWidth, height: chessboardWidth)
         // Do any additional setup after loading the view.
         
         //开始连接
         clientSocket = GCDAsyncSocket(delegate: self, delegateQueue: dispatch_get_main_queue())
         
         do {
-            try clientSocket?.connectToHost("192.168.0.104", onPort: UInt16(1234))
+            try clientSocket?.connectToHost("172.168.70.73", onPort: UInt16(1234))
             print("Client connect Success")
             
         } catch _ {
@@ -123,6 +119,14 @@ class BlackVC: UIViewController
         black?.addChess(absPoint, chess: chess, redDotLocation: CGPoint(x: x, y: y))
 //        print(blackCalcFunc.absLocation)
     }
+    func drawRedDot(origin: CGPoint) {
+        let chessWidth = blackCalcFunc.chessWidth
+        let x = origin.x + chessWidth / 2.4
+        let y = origin.y + chessWidth / 2.4
+        redDot.frame = CGRectMake(x, y, chessWidth / 5.5, chessWidth / 5.5)
+        redDot.image = UIImage(named: "redDot")
+        self.view.addSubview(redDot)
+    }
     
     //胜负判定
     func didIWin() -> Bool {
@@ -131,21 +135,9 @@ class BlackVC: UIViewController
     
     //将信息发送给client
     func sendMsgToServer(msg: String) {
-//        clientSocket = GCDAsyncSocket(delegate: self, delegateQueue: dispatch_get_main_queue())
-//        
-//        do {
-//            try clientSocket?.connectToHost("172.168.70.47", onPort: UInt16(1234))
-//            print("Client connect Success")
-//            
-//        } catch _ {
-//            print("Client connect Failed")
-//        }
-        
         if let data = msg.dataUsingEncoding(NSUTF8StringEncoding) {
             clientSocket?.writeData(data, withTimeout: -1, tag: 0)
         }
-//        clientSocket?.disconnect()
-//        clientSocket = nil
     }
     
     //画白子
@@ -177,6 +169,11 @@ class BlackVC: UIViewController
 
     //悔棋 落子后悔棋出栈两次 落子前悔棋出栈三次 根据第一次出栈情况判定是否落子
     @IBAction func undo(sender: AnyObject) {
+        sendMsgToServer("blackRequestUndo")
+    }
+    
+    //自身发出悔棋请求通过
+    func selfUndo() {
         if let firstPop = black?.popFromStack() { //(chess, chessAbsPointOfString)
             redDot.removeFromSuperview()
             firstPop.chess.removeFromSuperview()
@@ -202,6 +199,47 @@ class BlackVC: UIViewController
             }
         }
     }
+    
+    //dict -> drawRedDot
+    func drawRedDotByDict(lastChessDict: [String : UIImageView]) {
+        let keys = Array(lastChessDict.keys)
+        let key = keys.first!
+        let chess = lastChessDict[key]!
+        let origin = chess.frame.origin
+        drawRedDot(origin)
+    }
+    
+    //对方发出悔棋请求通过
+    func whiteUndo() {
+        self.view.userInteractionEnabled = false
+        if let firstPop = black?.popFromStack() {
+            redDot.removeFromSuperview()
+            firstPop.chess.removeFromSuperview()
+            if firstPop.chess.image?.accessibilityIdentifier == "black" { //落子后
+                if let secondPop = black?.popFromStack() {
+                    secondPop.chess.removeFromSuperview()
+                    if let lastChessDict = black?.chessStack.last {
+                        drawRedDotByDict(lastChessDict)
+                    }
+                }
+            } else if firstPop.chess.image?.accessibilityIdentifier == "white" { //落子前
+                if let lastChessDict = black?.chessStack.last {
+                    drawRedDotByDict(lastChessDict)
+                }
+            }
+        }
+    }
+    
+    //处理对方请求
+    func reqsCommitOrNot() {
+        let alertVC = UIAlertController(title: "白子提出悔棋请求", message: "", preferredStyle: .Alert)
+        alertVC.addAction(UIAlertAction(title: "commit", style: UIAlertActionStyle.Default, handler: { action in
+            self.sendMsgToServer("blackCommit")
+            self.whiteUndo() }))
+        alertVC.addAction(UIAlertAction(title: "cancel", style: UIAlertActionStyle.Cancel, handler: nil))
+        self.presentViewController(alertVC, animated: true, completion: nil)
+    }
+    
     /*
     // MARK: - Navigation
 
@@ -231,16 +269,25 @@ extension BlackVC: GCDAsyncSocketDelegate {
             
             //根据condition选择功能
             switch condition {
-            case "drawWhite": //画黑子
+            case "drawWhite" : //画黑子
                 whiteCalcFunc.absLocation.x = Int(info[1])!
                 whiteCalcFunc.absLocation.y = Int(info[2])!
                 drawWhite()
                 
-            case "blackEnable":
+            case "blackEnable" :
                 self.view.userInteractionEnabled = true
                 
-            case "whiteWin":
+            case "whiteWin" :
                 whiteWin()
+                
+            case "whiteRequestUndo" :
+                reqsCommitOrNot()
+                if black?.chessStack.isEmpty == true {
+                    self.view.userInteractionEnabled = true
+                }
+                
+            case "whiteCommit" :
+                selfUndo()
                 
             default:
                 break
